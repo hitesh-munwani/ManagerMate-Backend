@@ -38,6 +38,10 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name = "manager_id", referencedColumnName = "user_id")
+    private User manager;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 

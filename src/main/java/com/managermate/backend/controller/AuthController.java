@@ -33,9 +33,11 @@ public class AuthController {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        return ResponseEntity.ok(LoginResponse.builder()
+        LoginResponse response  = LoginResponse.builder()
                 .token(jwtToken)
-                .expiresIn(jwtService.getExpirationTime()).build());
+                .expiresIn(jwtService.getExpirationTime()).build();
+
+        return ResponseEntity.ok(response);
     }
 
 }

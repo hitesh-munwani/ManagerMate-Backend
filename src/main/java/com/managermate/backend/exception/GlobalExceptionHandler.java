@@ -13,5 +13,7 @@ public class GlobalExceptionHandler {
     public String handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
         return ex.getMessage();
     }
+
+
 }
 
