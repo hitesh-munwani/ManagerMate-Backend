@@ -1,5 +1,6 @@
 package com.managermate.backend.controller;
 
+import com.managermate.backend.dto.TaskDTO;
 import com.managermate.backend.exception.TaskNotFoundException;
 import com.managermate.backend.exception.UserNotFoundException;
 import com.managermate.backend.model.Task;
@@ -21,6 +22,29 @@ import java.util.Optional;
 public class TaskController {
 
     private final TaskService taskService;
+
+    @Operation(summary = "Create a new task", description = "Creates a new task with the provided details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid task data")
+    })
+    @PostMapping("/create")
+    public Task createTask(
+            @Parameter(description = "DTO containing task details for creation") @RequestBody TaskDTO taskDTO) throws UserNotFoundException {
+        return taskService.createTask(taskDTO);
+    }
+
+    @Operation(summary = "Delete a task", description = "Deletes a task by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
+    @DeleteMapping("/{taskId}")
+    public String deleteTask(
+            @Parameter(description = "ID of the task to delete") @PathVariable Integer taskId) throws TaskNotFoundException {
+        taskService.deleteTask(taskId);
+        return "Task deleted successfully";
+    }
 
     @Operation(summary = "Get all tasks assigned to a user", description = "Returns a list of tasks assigned to a user by their ID.")
     @ApiResponses(value = {
@@ -65,4 +89,16 @@ public class TaskController {
             @Parameter(description = "Status to filter tasks by") @PathVariable TaskStatus status) {
         return taskService.getTasksByStatus(status);
     }
+
+    @Operation(summary = "Assign a task to an employee", description = "Assigns a specific task to an employee by task ID and user ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task successfully assigned"),
+            @ApiResponse(responseCode = "404", description = "Task or User not found")
+    })
+    @PutMapping("/assign")
+    public Task assignTaskToEmployee(
+            @Parameter(description = "DTO containing task and user ID for assignment") @RequestBody TaskDTO taskDTO) throws TaskNotFoundException, UserNotFoundException {
+        return taskService.assignTaskToUser(taskDTO);
+    }
+
 }

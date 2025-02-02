@@ -5,7 +5,9 @@ import com.managermate.backend.model.Role;
 import com.managermate.backend.model.User;
 import com.managermate.backend.repository.RoleRepository;
 import com.managermate.backend.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
@@ -28,7 +30,7 @@ public class UserService {
 
     public List<User> getUsersByRoleId(Integer roleId) throws RoleNotFoundException {
         Role role = roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException("Role not foudn"));
-        return userRepository.findByRole(role);
+        return userRepository.findByRoleAndIsActiveTrueOrIsActiveNull(role);
     }
 
     public List<User> getEmployeesByManagerId(Integer managerId) throws UserNotFoundException {
@@ -36,11 +38,11 @@ public class UserService {
         if(user == null) {
             throwUserNotFoundWithCustomMessage("User with id %d does not exist", managerId);
         }
-        return userRepository.findByManager(user);
+        return userRepository.findByManagerAndIsActiveTrueOrIsActiveNull(user);
     }
 
     public User getManagerByEmployeeId(Integer userId) throws UserNotFoundException {
-        User employee = userRepository.findByUserId(userId);
+        User employee = userRepository.findByUserIdAndIsActiveTrueOrIsActiveNull(userId).orElse(null);
         if(employee == null) {
             throwUserNotFoundWithCustomMessage("Employee with id %d does not exist", userId);
         }
@@ -50,7 +52,19 @@ public class UserService {
         return employee;
     }
 
+    public ResponseEntity<User> toggleActiveStatus(Integer userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) {
+            throwUserNotFoundWithCustomMessage("User not found with id ", userId);
+        }
+
+        user.setIsActive(!user.getIsActive());
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
+
     private static void throwUserNotFoundWithCustomMessage(String format, Integer userId) throws UserNotFoundException {
         throw new UserNotFoundException(String.format(format, userId));
     }
+
 }

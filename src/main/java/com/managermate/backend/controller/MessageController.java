@@ -3,33 +3,51 @@ package com.managermate.backend.controller;
 import com.managermate.backend.dto.MessageDTO;
 import com.managermate.backend.model.Message;
 import com.managermate.backend.service.MessageService;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/message")
 @RequiredArgsConstructor
+@Tag(name = "Message API", description = "Manage messages and conversations")
 public class MessageController {
+
     private final MessageService messageService;
 
+    @Operation(summary = "Send a new message")
     @PostMapping("/send")
-    public String sendMessage(@Valid @RequestBody MessageDTO messageDTO){
-        return messageService.sendMessage(messageDTO);
+    public ResponseEntity<String> sendMessage(@Valid @RequestBody MessageDTO messageDTO) {
+        String result = messageService.sendMessage(messageDTO);
+        return ResponseEntity.ok(result);
     }
 
+    @Operation(summary = "Get conversation between two users")
     @GetMapping("/conversation/{userID}/{otherUserID}")
-    public List<Message> getConversation(
-        @PathVariable Integer userID,
-        @PathVariable Integer otherUserID
-    ){
-        return messageService.getConversation(userID, otherUserID);
+    public ResponseEntity<List<Message>> getConversation(
+            @PathVariable Integer userID,
+            @PathVariable Integer otherUserID
+    ) {
+        List<Message> messages = messageService.getConversation(userID, otherUserID);
+        return ResponseEntity.ok(messages);
     }
 
+    @Operation(summary = "Mark a message as seen")
     @PutMapping("/mark-as-seen/{messageId}")
-    public String markAsSeen(@PathVariable Long messageId) {
-        return messageService.markAsSeen(messageId);
+    public ResponseEntity<String> markAsSeen(@PathVariable Long messageId) {
+        String result = messageService.markAsSeen(messageId);
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "Handle WebSocket messages")
+    @MessageMapping("/chat.send")
+    public void handleWebSocketMessage(@Valid MessageDTO messageDTO) {
+        messageService.sendMessage(messageDTO);
     }
 }
