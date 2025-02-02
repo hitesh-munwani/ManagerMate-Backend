@@ -1,5 +1,6 @@
 package com.managermate.backend.controller;
 
+import com.managermate.backend.exception.UserNotFoundException;
 import com.managermate.backend.model.User;
 import com.managermate.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/details/{userId}")
-    User getUserDetails(@PathVariable Integer userId) {
+    User getUserDetails(@PathVariable Integer userId) throws UserNotFoundException {
        return userService.findUserById(userId);
     }
 }
