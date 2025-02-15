@@ -101,4 +101,12 @@ public class TaskController {
         return taskService.assignTaskToUser(taskDTO);
     }
 
+    @Operation(summary = "Get all tasks created by managerId", description = "Returns a list of all tasks by manager.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of all tasks")
+    })
+    @GetMapping("/manager/{managerId}")
+    public List<Task> getAllTasks(@PathVariable Integer managerId) throws UserNotFoundException {
+        return taskService.getAllTasks(managerId);
+    }
 }

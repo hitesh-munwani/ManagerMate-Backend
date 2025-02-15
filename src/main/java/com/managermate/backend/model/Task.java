@@ -51,16 +51,18 @@ public class Task {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    @Column(name = "check_in_time")
-    private LocalDateTime checkInTime;
-
-    @Column(name = "check_out_time")
-    private LocalDateTime checkOutTime;
-
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public TaskStatus getStatus() {
+        return status != null ? TaskStatus.fromString(status.getKey()) : null;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 }
 

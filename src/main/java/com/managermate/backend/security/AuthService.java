@@ -38,7 +38,7 @@ public class AuthService {
                 )
         );
 
-        return userRepository.findByEmailAndIsActiveTrueOrIsActiveNull(input.getEmail())
+        return userRepository.findByEmail(input.getEmail())
                 .orElseThrow();
     }
 
@@ -64,17 +64,27 @@ public class AuthService {
 
 
     private void rejectIfEmailAlreadyExists(RegisterUserDto input) {
-        if (userRepository.existsByEmailAndIsActiveTrueOrIsActiveNull(input.getEmail())) {
+        if (userRepository.existsByEmail(input.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
     }
 
     private User mapToUser(RegisterUserDto input) {
+
+        User user = new User();
+        if(input.getManagerId() != null){
+            user = userRepository.findByUserId(input.getManagerId());
+        }
+
         return User.builder()
-                .username(input.getUsername())
+                .user_name(input.getUsername())
+                .manager(input.getManagerId() != null ? user: null)
                 .email(input.getEmail())
                 .password(passwordEncoder.encode(input.getPassword()))
                 .role(roleRepository.findByRoleNameIgnoreCase(input.getRole()))
+                .designation(input.getDesignation())
+                .createdAt(LocalDateTime.now())
+                .createdBy(user.getEmail())
                 .build();
     }
 }

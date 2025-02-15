@@ -13,4 +13,7 @@ public class RegisterUserDto {
     private String email;
     @NotBlank(message = "role is required")
     private String role;
+
+    private Integer managerId;
+    private String designation;
 }

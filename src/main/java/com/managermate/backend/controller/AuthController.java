@@ -9,7 +9,6 @@ import com.managermate.backend.model.User;
 import com.managermate.backend.security.AuthService;
 import com.managermate.backend.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -48,6 +47,7 @@ public class AuthController {
 
         LoginResponse response = LoginResponse.builder()
                 .token(jwtToken)
+                .userId(authenticatedUser.getUserId())
                 .expiresIn(jwtService.getExpirationTime())
                 .role(authenticatedUser.getRole().getRoleName())
                 .build();

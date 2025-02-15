@@ -29,8 +29,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false)
     private Role role;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "user_name")
+    private String user_name;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -56,6 +56,9 @@ public class User implements UserDetails {
 
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @Column(name = "designation")
+    private String designation;
 
     @Override
     public String getUsername() {

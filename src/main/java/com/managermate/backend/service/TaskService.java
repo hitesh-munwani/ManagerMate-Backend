@@ -29,6 +29,7 @@ public class TaskService {
         task.setTaskName(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
         task.setDueDate(taskDTO.getDueDate());
+        task.setStatus(TaskStatus.PENDING);
         task.setAssignedBy(manager);
         task.setCreatedBy(manager);
         task.setCreatedAt(LocalDateTime.now());
@@ -86,4 +87,10 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    public List<Task> getAllTasks(Integer managerId) throws UserNotFoundException {
+
+        User manager = userRepository.findByUserId(managerId);
+
+        return taskRepository.findByCreatedBy(manager);
+    }
 }

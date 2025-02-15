@@ -38,7 +38,7 @@ public class UserService {
         if(user == null) {
             throwUserNotFoundWithCustomMessage("User with id %d does not exist", managerId);
         }
-        return userRepository.findByManagerAndIsActiveTrueOrIsActiveNull(user);
+        return userRepository.findActiveOrUnspecifiedUsersByManager(user);
     }
 
     public User getManagerByEmployeeId(Integer userId) throws UserNotFoundException {
