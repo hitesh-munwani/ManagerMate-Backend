@@ -42,14 +42,14 @@ public class UserService {
     }
 
     public User getManagerByEmployeeId(Integer userId) throws UserNotFoundException {
-        User employee = userRepository.findByUserIdAndIsActiveTrueOrIsActiveNull(userId).orElse(null);
+        User employee = userRepository.findByUserId(userId);
         if(employee == null) {
             throwUserNotFoundWithCustomMessage("Employee with id %d does not exist", userId);
         }
         if(employee.getManager() == null) {
             throwUserNotFoundWithCustomMessage("Manager for employee id %d does not exist", userId);
         }
-        return employee;
+        return employee.getManager();
     }
 
     public ResponseEntity<User> toggleActiveStatus(Integer userId) throws UserNotFoundException {

@@ -61,6 +61,11 @@ public class TaskService {
         if (taskOptional.isPresent()) {
             Task task = taskOptional.get();
             task.setStatus(status);
+
+            if(status.equals(TaskStatus.PENDING)){
+                task.setStartedAt(LocalDateTime.now());
+            }
+
             return taskRepository.save(task);
         }
         throw new TaskNotFoundException("Task not found with this id");

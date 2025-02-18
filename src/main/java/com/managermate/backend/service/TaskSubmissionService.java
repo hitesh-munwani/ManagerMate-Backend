@@ -36,16 +36,18 @@ public class TaskSubmissionService {
         return taskSubmissionRepository.findByTaskTaskId(taskId);
     }
 
-    public void submitTask(Integer taskId, Integer userId, String comment, MultipartFile file) throws IOException, TaskNotFoundException {
-        byte[] fileData = file.getBytes();
+    public void submitTask(Integer taskId, Integer userId, String comment, MultipartFile file)
+            throws IOException, TaskNotFoundException {
 
         Optional<Task> task = taskRepository.findByTaskId(taskId);
-        Optional<User> user = userRepository.findByUserIdAndIsActiveTrueOrIsActiveNull(userId);
+        User user = userRepository.findByUserId(userId);
 
-        if (task.isPresent() && user.isPresent()) {
+        if (task.isPresent() && user!=null) {
+            byte[] fileData = (file != null && !file.isEmpty()) ? file.getBytes() : null;
+
             TaskSubmission taskSubmission = TaskSubmission.builder()
                     .task(task.get())
-                    .user(user.get())
+                    .user(user )
                     .submissionTime(LocalDateTime.now())
                     .submissionComment(comment)
                     .submissionImage(fileData)

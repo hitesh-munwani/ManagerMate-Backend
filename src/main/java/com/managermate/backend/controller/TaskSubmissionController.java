@@ -72,7 +72,7 @@ public class TaskSubmissionController {
             @RequestParam Integer taskId,
             @RequestParam Integer userId,
             @RequestParam String comment,
-            @RequestParam MultipartFile file) throws IOException, TaskNotFoundException {
+            @RequestParam(required = false) MultipartFile file) throws IOException, TaskNotFoundException {
 
         taskSubmissionService.submitTask(taskId, userId, comment, file);
 

@@ -57,6 +57,9 @@ public class Task {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "started_at")
+    private LocalDateTime startedAt;
+
     public TaskStatus getStatus() {
         return status != null ? TaskStatus.fromString(status.getKey()) : null;
     }
