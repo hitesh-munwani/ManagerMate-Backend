@@ -105,7 +105,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of all tasks")
     })
-    @GetMapping("/{managerId}")
+    @GetMapping("/manager/{managerId}")
     public List<Task> getAllTasks(@PathVariable Integer managerId) throws UserNotFoundException {
         return taskService.getAllTasks(managerId);
     }

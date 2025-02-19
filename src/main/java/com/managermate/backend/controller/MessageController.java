@@ -2,15 +2,9 @@ package com.managermate.backend.controller;
 
 import com.managermate.backend.dto.MessageDTO;
 import com.managermate.backend.dto.UnreadMessagesDto;
-import com.managermate.backend.exception.UserNotFoundException;
 import com.managermate.backend.model.Message;
-import com.managermate.backend.model.User;
 import com.managermate.backend.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

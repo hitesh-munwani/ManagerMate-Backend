@@ -30,16 +30,20 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     SELECT e.userId AS userId,
            e.user_name AS userName, 
            COUNT(m.id) AS totalMessages, 
-           COALESCE(SUM(CASE WHEN m.readAt IS NULL AND m.receiver.userId = :managerId THEN 1 ELSE 0 END), 0) AS unreadCount,\s
+           COALESCE(SUM(CASE WHEN m.readAt IS NULL AND m.receiver.userId = :managerId THEN 1 ELSE 0 END), 0) AS unreadCount,
            (SELECT m1.content 
             FROM Message m1 
-            WHERE (m1.sender.userId = e.userId OR m1.receiver.userId = e.userId)
-            ORDER BY m1.id DESC LIMIT 1) AS lastMessage
+            WHERE (m1.sender.userId = e.userId AND m1.receiver.userId = :managerId) 
+               OR (m1.receiver.userId = e.userId AND m1.sender.userId = :managerId)
+            ORDER BY m1.id DESC 
+            LIMIT 1) AS lastMessage
     FROM User e
-    JOIN Message m ON e.userId = m.receiver.userId OR e.userId = m.sender.userId
+    JOIN Message m ON (e.userId = m.receiver.userId OR e.userId = m.sender.userId)
+                   AND (m.sender.userId = :managerId OR m.receiver.userId = :managerId)
     WHERE e.userId <> :managerId
     GROUP BY e.userId, e.user_name
 """)
+
     List<UnreadMessagesProjection> findUnreadMessages(@Param("managerId") Integer managerId);
 
 }
